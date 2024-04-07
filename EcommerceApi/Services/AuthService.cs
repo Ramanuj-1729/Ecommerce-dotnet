@@ -36,11 +36,11 @@ namespace EcommerceApi.Services
                     throw new InvalidOperationException("User with the same email already exists.");
 
 
-                string salt = BCrypt.Net.BCrypt.GenerateSalt();
+                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
                 string hashPassword = BCrypt.Net.BCrypt.HashPassword(user.Password, salt);
 
                 var userEntity = _mapper.Map<User>(user);
-                user.Password = HashPassword(user.Password, salt);
+                userEntity.Password = HashPassword(user.Password, salt);
                 _context.Users.Add(userEntity);
                 await _context.SaveChangesAsync();
 
