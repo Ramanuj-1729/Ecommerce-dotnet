@@ -11,5 +11,9 @@ namespace EcommerceApi
         public DbSet<User> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<WishList> WishLists { get; set; }
     }
 }
