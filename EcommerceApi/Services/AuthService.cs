@@ -56,7 +56,7 @@ namespace EcommerceApi.Services
         public async Task<string> Login(UserLoginDTO user)
         {
 
-            var userEntity = await _context.Users.FirstOrDefaultAsync(user => user.Email == user.Email);
+            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
             if (userEntity == null || !validatePassword(user.Password, userEntity.Password))
             {
