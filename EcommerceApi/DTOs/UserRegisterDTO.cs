@@ -32,8 +32,5 @@ namespace EcommerceApi.DTOs
         [Required(ErrorMessage = "Gender is required.")]
         public char Gender { get; set; }
 
-        //User Role
-        public required string Role { get; set; } = "user";
-
     }
 }
