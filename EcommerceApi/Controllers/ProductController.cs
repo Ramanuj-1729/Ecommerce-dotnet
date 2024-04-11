@@ -21,7 +21,7 @@ namespace EcommerceApi.Controllers
         //[Authorize(Roles = "admin")] // Requires admin role
         //[ProducesResponseType(200)] // Successful response
         //[ProducesResponseType(500)] // Server error response
-        public async Task<IActionResult> AddProduct([FromBody] Product productDto, IFormFile image)
+        public async Task<IActionResult> AddProduct([FromForm] Product productDto, IFormFile image)
         {
             try
             {
