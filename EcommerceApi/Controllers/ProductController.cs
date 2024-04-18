@@ -21,12 +21,12 @@ namespace EcommerceApi.Controllers
         //[Authorize(Roles = "admin")] // Requires admin role
         //[ProducesResponseType(200)] // Successful response
         //[ProducesResponseType(500)] // Server error response
-        public async Task<IActionResult> AddProduct([FromForm] Product productDto, IFormFile image)
+        public async Task<IActionResult> AddProduct([FromForm] Product productDto, IFormFile image, IFormFileCollection images)
         {
             try
             {
                 // Add product
-                var res = await _productService.CreateProduct(productDto, image);
+                var res = await _productService.CreateProduct(productDto, image, images);
                 return res ? Ok("Product created successfully!") : StatusCode(500, "Error while creating a new product!");
             }
             catch (Exception e)
@@ -35,6 +35,22 @@ namespace EcommerceApi.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+        //[HttpGet("images")]
+        //public async Task<IActionResult> GetProductImages(int id)
+        //{
+        //    try
+        //    {
+        //        // Retrieve all products
+        //        var images = await _productService.GetProductImages(id);
+        //        return Ok(images);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Return server error if an exception occurs
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
         [HttpGet]
         //[Authorize] // Requires authentication
@@ -88,11 +104,11 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product, IFormFile image)
+        public async Task<IActionResult> UpdateProduct(int id, [FromForm] Product product, IFormFile image, IFormFileCollection images)
         {
             try
             {
-                bool res = await _productService.UpdateProduct(id, product, image);
+                bool res = await _productService.UpdateProduct(id, product, image, images);
                 return res ? Ok("Product Successfully Updated!!") : StatusCode(500, "An error occurred while updating product!");
             }
             catch (Exception e)

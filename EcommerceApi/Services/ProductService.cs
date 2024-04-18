@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace EcommerceApi.Services
@@ -26,37 +27,83 @@ namespace EcommerceApi.Services
         }
 
 
-        public async Task<bool> CreateProduct(Product product, IFormFile image)
+        public async Task<bool> CreateProduct(Product product, IFormFile image, IFormFileCollection images)
         {
             try
             {
                 string? productImage = null;
+                var productImageFileNames = new List<string>();
 
 
                 if (image != null && image.Length > 0)
                 {
+                    string path = $"{_webHostEnvironment.WebRootPath}\\Images\\Products\\Image";
 
-                    string filleName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-
-                    //Getting file Path
-                    string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Products", filleName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    try
                     {
-                        await image.CopyToAsync(stream);
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        else
+                        {
+                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                            string filePath = Path.Combine(path, fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await image.CopyToAsync(stream);
+                            }
+
+                            productImage = $"{_hostUrl}Images/Products/Image/{fileName}";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                        throw new Exception("Error while while creating image path: " + ex.Message);
+                    }
+                }
+
+                if(images != null && images.Count > 0)
+                {
+                    string path = $"{_webHostEnvironment.WebRootPath}\\Images\\Products\\Images";
+
+                    try
+                    {
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        else
+                        {
+                            foreach (var img in images)
+                            {
+                                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+                                string filePath = Path.Combine(path, fileName);
+
+                                using (var stream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    await img.CopyToAsync(stream);
+                                }
+
+                                productImageFileNames.Add($"{_hostUrl}Images/Products/Images/{fileName}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                        throw new Exception("Error while while creating image path: " + ex.Message);
                     }
 
-                    productImage = "/Images/Products/" + filleName;
-                }
-                else
-                {
-                    productImage = "/Images/Products/placeholder.jpg";
                 }
 
 
                 //var product = _mapper.Map<Models.ProductModels.Product>(productDTO);
 
                 product.Image = productImage;
+                product.Images = productImageFileNames.Select(fileName => new ProductImage { ImageUrl = fileName }).ToList();
 
                 await _context.Products.AddAsync(product);
                 await _context.SaveChangesAsync();
@@ -72,27 +119,53 @@ namespace EcommerceApi.Services
             }
         }
 
+        public List<ProductImage> GetProductImages(int productId)
+        {
+            try
+            {
+                var productImages = _context.ProductImages.Where(p => p.ProductId == productId).ToList();
+
+                if (productImages.Count > 0)
+                {
+                    return productImages;
+                }
+                return [];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message); throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<List<Product>> GetProducts()
         {
             try
             {
                 var products = await _context.Products.ToListAsync();
-                
-                if(products.Count > 0)
+
+                if (products.Count > 0)
                 {
+                    foreach(var product in products)
+                    {
+                        var images = GetProductImages(product.Id);
+                        product.Images = images;
+                    }
+
                     return products;
                 }
                 return [];
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);throw new Exception(ex.Message);
+                Console.WriteLine(ex.Message); throw new Exception(ex.Message);
             }
         }
 
         public async Task<Product> GetProductById(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var images = GetProductImages(product.Id);
+            product.Images = images;
             return product;
         }
 
@@ -113,7 +186,7 @@ namespace EcommerceApi.Services
             }
         }
 
-        public async Task<bool> UpdateProduct(int id, Product productparam, IFormFile image)
+        public async Task<bool> UpdateProduct(int id, Product productparam, IFormFile image, IFormFileCollection images)
         {
             try
             {
@@ -126,25 +199,45 @@ namespace EcommerceApi.Services
                     product.Quantity = productparam.Quantity;
                     product.Rating = productparam.Rating;
                     product.CategoryId = productparam.CategoryId;
-
+                    product.IsFeatured = productparam.IsFeatured;
+                    product.IsNew = productparam.IsNew;
+                    product.IsOnSale = productparam.IsOnSale;
+                    product.Discount = productparam.Discount;
 
                     if (image != null && image.Length > 0)
                     {
 
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                        string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Products", fileName);
+                        string filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await image.CopyToAsync(stream);
                         }
 
-
-                        product.Image = "/Images/Products/" + fileName;
+                        product.Image = $"{_hostUrl}Images/Products/Image/{fileName}";
                     }
-                    else
+
+                    var productImageFileNames = new List<string>();
+
+                    if (images != null && images.Count > 0)
                     {
-                        product.Image = "Images/Products/PlaceholderImg/placeholder.jpg";
+
+                        foreach (var img in images)
+                        {
+                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+                            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await img.CopyToAsync(stream);
+                            }
+
+                            productImageFileNames.Add($"{_hostUrl}Images/Products/Images/{fileName}");
+                        }
+
+                        product.Images = productImageFileNames.Select(fileName => new ProductImage { ImageUrl = fileName }).ToList();
+
                     }
 
 

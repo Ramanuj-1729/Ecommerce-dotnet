@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240408145424_ecommercefirst")]
-    partial class ecommercefirst
+    [Migration("20240418164138_ecomm-first")]
+    partial class ecommfirst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,26 +34,21 @@ namespace EcommerceApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("Zip")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -94,7 +89,6 @@ namespace EcommerceApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrderStatus")
@@ -158,9 +152,20 @@ namespace EcommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNew")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOnSale")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -178,6 +183,27 @@ namespace EcommerceApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("EcommerceApi.Models.User", b =>
@@ -216,7 +242,6 @@ namespace EcommerceApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -291,6 +316,15 @@ namespace EcommerceApi.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("EcommerceApi.Models.ProductImage", b =>
+                {
+                    b.HasOne("EcommerceApi.Models.Product", null)
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EcommerceApi.Models.WishList", b =>
                 {
                     b.HasOne("EcommerceApi.Models.Product", "Product")
@@ -315,10 +349,14 @@ namespace EcommerceApi.Migrations
                     b.Navigation("OrderItems");
                 });
 
+            modelBuilder.Entity("EcommerceApi.Models.Product", b =>
+                {
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("EcommerceApi.Models.User", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

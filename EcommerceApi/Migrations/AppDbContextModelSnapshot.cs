@@ -149,9 +149,20 @@ namespace EcommerceApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNew")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOnSale")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -169,6 +180,27 @@ namespace EcommerceApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Models.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("EcommerceApi.Models.User", b =>
@@ -281,6 +313,15 @@ namespace EcommerceApi.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("EcommerceApi.Models.ProductImage", b =>
+                {
+                    b.HasOne("EcommerceApi.Models.Product", null)
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EcommerceApi.Models.WishList", b =>
                 {
                     b.HasOne("EcommerceApi.Models.Product", "Product")
@@ -303,6 +344,11 @@ namespace EcommerceApi.Migrations
             modelBuilder.Entity("EcommerceApi.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("EcommerceApi.Models.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("EcommerceApi.Models.User", b =>
