@@ -11,10 +11,12 @@ namespace EcommerceApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
+        private readonly TokenService _tokenService;
 
-        public AuthController(AuthService service)
+        public AuthController(AuthService service, TokenService tokenService)
         {
             _authService = service;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Register")]
@@ -25,7 +27,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 string message = await _authService.Register(user);
-                return Ok(new { Token = message });
+                return Ok(new { message });
             }
             catch (Exception e)
             {
@@ -41,11 +43,42 @@ namespace EcommerceApi.Controllers
             try
             {
                 var token = await _authService.Login(user);
-                return Ok(new { Token = token });
+                _tokenService.SetTokenCookie(token);
+                return Ok(new { message = "Login successful" });
             }
             catch (Exception e)
             {
                 return Unauthorized(new { Message = "Login failed.", Error = e.Message });
+            }
+        }
+
+        [HttpPost("Logout")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 401)]
+        public async Task<ActionResult<string>> Logout()
+        {
+            try
+            {
+                _tokenService.RemoveTokenCookie();
+                return Ok(new { message = "Logout successful" });
+            }
+            catch (Exception e)
+            {
+                return Unauthorized(new { Message = "Logout failed.", Error = e.Message });
+            }
+        }
+
+        [HttpGet("Token")]
+        public async Task<ActionResult<string>> GetToken()
+        {
+            try
+            {
+                var token = _tokenService.GetTokenCookie();
+                return Ok(new { Token = token });
+            }
+            catch (Exception e)
+            {
+                return Unauthorized(new { Message = "Token not found.", Error = e.Message });
             }
         }
     }

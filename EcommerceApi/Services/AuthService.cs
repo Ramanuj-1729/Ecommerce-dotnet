@@ -63,13 +63,9 @@ namespace EcommerceApi.Services
                 throw new InvalidOperationException("Invalid email or password");
             }
 
-
-
             var token = GenerateJwtToken(userEntity);
 
             return token;
-
-
         }
 
         private string GenerateJwtToken(User user)

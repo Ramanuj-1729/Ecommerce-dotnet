@@ -53,7 +53,7 @@ namespace EcommerceApi.Controllers
         //}
 
         [HttpGet]
-        //[Authorize] // Requires authentication
+        // [Authorize] // Requires authentication
         //[ProducesResponseType(typeof(object), 200)] // Successful response
         //[ProducesResponseType(401)] // Unauthorized response
         //[ProducesResponseType(500)] // Server error response
