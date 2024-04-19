@@ -29,6 +29,9 @@ namespace EcommerceApi.Models
         [Required(ErrorMessage = "Category ID is required.")]
         public int CategoryId { get; set; }
 
+        [Required(ErrorMessage = "Brand ID is required.")]
+        public int BrandId { get; set; }
+
         public bool IsFeatured { get; set; }
 
         public bool IsNew { get; set; }

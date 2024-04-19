@@ -57,6 +57,9 @@ builder.Services.AddScoped<TokenService>();
 //Category Service
 builder.Services.AddScoped<CategoryService>();
 
+//Brand Service
+builder.Services.AddScoped<BrandService>();
+
 //Address Service
 builder.Services.AddScoped<AddressService>();
 
@@ -88,8 +91,16 @@ builder.Services.AddCors(options =>
                           {
                               policy.WithOrigins("http://localhost:4200")
                                                   .AllowAnyHeader()
-                                                  .AllowAnyMethod();
+                                                  .AllowAnyMethod()
+                                                  .AllowCredentials();
                           });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use CookieSecurePolicy.None for development over HTTP
+    options.Cookie.SameSite = SameSiteMode.Strict; // Requires cross-site cookies
 });
 
 var app = builder.Build();

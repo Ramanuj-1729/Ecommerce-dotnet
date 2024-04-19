@@ -14,10 +14,9 @@
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true, // This restricts the cookie to be accessed only through HTTP requests
-                                 // Other options you might consider:
-                                 // Secure = true, // Send cookie only over HTTPS (recommended for secure tokens)
-                                 // SameSite = SameSiteMode.Strict, // Protects against CSRF attacks (recommended)
-                                 // Expires = DateTimeOffset.UtcNow.AddDays(1) // Set an expiration time if needed
+                Secure = true, // Send cookie only over HTTPS (recommended for secure tokens)
+                SameSite = SameSiteMode.Strict, // Protects against CSRF attacks (recommended)
+                Expires = DateTimeOffset.UtcNow.AddDays(1) // Set an expiration time if needed
             };
 
             _httpContextAccessor.HttpContext.Response.Cookies.Append("AuthToken", token, cookieOptions);

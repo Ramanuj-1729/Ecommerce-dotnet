@@ -169,6 +169,66 @@ namespace EcommerceApi.Services
             return product;
         }
 
+        public async Task<List<Product>> GetProductsByFlag(string flag)
+        {
+            try
+            {
+                if(flag == "isFeatured")
+                {
+                    var products = await _context.Products.Where(p => p.IsFeatured == true).ToListAsync();
+                    if (products.Count > 0)
+                    {
+                        foreach (var product in products)
+                        {
+                            var images = GetProductImages(product.Id);
+                            product.Images = images;
+                        }
+
+                        return products;
+                    }
+                    return [];
+                }
+                else if(flag == "isNew")
+                {
+                    var products = await _context.Products.Where(p => p.IsNew == true).ToListAsync();
+                    if (products.Count > 0)
+                    {
+                        foreach (var product in products)
+                        {
+                            var images = GetProductImages(product.Id);
+                            product.Images = images;
+                        }
+
+                        return products;
+                    }
+                    return [];
+                }
+                else if(flag == "isOnSale")
+                {
+                    var products = await _context.Products.Where(p => p.IsOnSale == true).ToListAsync();
+                    if (products.Count > 0)
+                    {
+                        foreach (var product in products)
+                        {
+                            var images = GetProductImages(product.Id);
+                            product.Images = images;
+                        }
+
+                        return products;
+                    }
+                    return [];
+                }
+                else
+                {
+                    return [];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message); throw new Exception(ex.Message);
+            }
+        }   
+
         public async Task<bool> DeleteProduct(int id)
         {
             try

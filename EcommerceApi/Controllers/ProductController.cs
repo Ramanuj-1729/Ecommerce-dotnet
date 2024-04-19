@@ -86,6 +86,20 @@ namespace EcommerceApi.Controllers
             }
         }
 
+        [HttpGet("Flag")]
+        public async Task<IActionResult> GetProductsByFlag(string flag)
+        {
+            try
+            {
+                var products = await _productService.GetProductsByFlag(flag);
+                return Ok(products);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }   
+
         [HttpDelete("{id}")]
         //[Authorize(Roles = "admin")] // Requires admin role
         [ProducesResponseType(200)] // Successful response

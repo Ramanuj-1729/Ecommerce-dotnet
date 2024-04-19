@@ -74,7 +74,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 var token = _tokenService.GetTokenCookie();
-                return Ok(new { Token = token });
+                return Ok(token);
             }
             catch (Exception e)
             {
