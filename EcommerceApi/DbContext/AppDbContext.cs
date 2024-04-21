@@ -19,5 +19,7 @@ namespace EcommerceApi
 
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<WishList> WishLists { get; set; }
+        public DbSet<Cart> Cart { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

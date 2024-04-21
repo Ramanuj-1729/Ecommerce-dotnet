@@ -5,6 +5,7 @@ using EcommerceApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -63,6 +64,9 @@ builder.Services.AddScoped<BrandService>();
 //Address Service
 builder.Services.AddScoped<AddressService>();
 
+//Cart Service
+builder.Services.AddScoped<CartService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -101,6 +105,34 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use CookieSecurePolicy.None for development over HTTP
     options.Cookie.SameSite = SameSiteMode.Strict; // Requires cross-site cookies
+});
+
+builder.Services.AddSwaggerGen(config =>
+{
+    config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        In = ParameterLocation.Header,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+
+    config.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
 });
 
 var app = builder.Build();

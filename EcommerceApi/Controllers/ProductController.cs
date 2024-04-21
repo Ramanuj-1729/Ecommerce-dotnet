@@ -36,24 +36,24 @@ namespace EcommerceApi.Controllers
             }
         }
 
-        //[HttpGet("images")]
-        //public async Task<IActionResult> GetProductImages(int id)
-        //{
-        //    try
-        //    {
-        //        // Retrieve all products
-        //        var images = await _productService.GetProductImages(id);
-        //        return Ok(images);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Return server error if an exception occurs
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpGet("images")]
+        public async Task<IActionResult> GetProductImages(int id)
+        {
+            try
+            {
+                // Retrieve all products
+                var images = _productService.GetProductImages(id);
+                return Ok(images);
+            }
+            catch (Exception ex)
+            {
+                // Return server error if an exception occurs
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpGet]
-        // [Authorize] // Requires authentication
+        [Authorize] // Requires authentication
         //[ProducesResponseType(typeof(object), 200)] // Successful response
         //[ProducesResponseType(401)] // Unauthorized response
         //[ProducesResponseType(500)] // Server error response
@@ -72,7 +72,7 @@ namespace EcommerceApi.Controllers
             }
         }
 
-        [HttpGet("id")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProdectById(int id)
         {
             try

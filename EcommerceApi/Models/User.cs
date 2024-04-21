@@ -39,6 +39,8 @@ namespace EcommerceApi.Models
 
         public virtual Address Address { get; set; }
 
+        public virtual Cart Cart { get; set; }
+
         // Navigation properties
         //public virtual List<Order> Orders { get; set; }
         //public virtual List<WishList> WishLists { get; set; }
