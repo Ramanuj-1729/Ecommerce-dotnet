@@ -17,7 +17,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("get-wishlist")]
-        //[Authorize] // Requires authentication
+        [Authorize] // Requires authentication
         [ProducesResponseType(typeof(object), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -34,7 +34,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPost("add-wishlist")]
-        //[Authorize] // Requires authentication
+        [Authorize] // Requires authentication
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(400)] // Bad request response
         [ProducesResponseType(500)] // Server error response
@@ -47,7 +47,7 @@ namespace EcommerceApi.Controllers
                 {
                     return BadRequest("Item already in the wish list");
                 }
-                return Ok();
+                return Ok("Product added Successfully to wishlist");
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpDelete("remove-wishlist")]
-        //[Authorize] // Requires authentication
+        [Authorize] // Requires authentication
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(500)] // Server error response
         public async Task<ActionResult> RemoveFromWishList(int productId)
@@ -64,7 +64,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 await _wishListService.RemoveFromWishList(productId);
-                return Ok();
+                return Ok("Product deleted Successfully from wishlist");
             }
             catch (Exception e)
             {

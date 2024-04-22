@@ -9,6 +9,7 @@ namespace EcommerceApi.Mappings
         public AppMapper()
         {
             CreateMap<User, UserRegisterDTO>().ReverseMap();
+            CreateMap<WishList, WishListDTO>().ReverseMap();
         }
     }
 }

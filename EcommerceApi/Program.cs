@@ -14,8 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -57,6 +55,9 @@ builder.Services.AddScoped<TokenService>();
 
 //Category Service
 builder.Services.AddScoped<CategoryService>();
+
+//Wishlist Service
+builder.Services.AddScoped<WishListService>();
 
 //Brand Service
 builder.Services.AddScoped<BrandService>();
@@ -103,8 +104,8 @@ builder.Services.AddCors(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use CookieSecurePolicy.None for development over HTTP
-    options.Cookie.SameSite = SameSiteMode.Strict; // Requires cross-site cookies
+    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use CookieSecurePolicy.None for development over HTTP
+    //options.Cookie.SameSite = SameSiteMode.Strict; // Requires cross-site cookies
 });
 
 builder.Services.AddSwaggerGen(config =>
@@ -148,9 +149,10 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
-app.UseAuthentication();
 
 app.UseStaticFiles();
 

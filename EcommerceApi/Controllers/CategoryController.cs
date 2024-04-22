@@ -1,5 +1,6 @@
 ﻿using EcommerceApi.Models;
 using EcommerceApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,6 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-        //[Authorize] // Requires authentication
         [ProducesResponseType(typeof(object), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -34,7 +34,6 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
         [ProducesResponseType(typeof(object), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -53,7 +52,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(typeof(bool), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -71,7 +70,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -89,7 +88,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response

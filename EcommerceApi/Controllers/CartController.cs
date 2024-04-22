@@ -19,10 +19,10 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("GetCartItems")]
-        //[Authorize] // Requires authentication
-        //[ProducesResponseType(typeof(object), 200)] // Response type when successful
-        //[ProducesResponseType(401)] // Unauthorized response
-        //[ProducesResponseType(500)] // Server error response
+        [Authorize] // Requires authentication
+        [ProducesResponseType(typeof(object), 200)] // Response type when successful
+        [ProducesResponseType(401)] // Unauthorized response
+        [ProducesResponseType(500)] // Server error response
         public async Task<ActionResult> GetCartItems()
         {
             try
@@ -43,9 +43,9 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPost("add-to-cart")]
-        //[Authorize] // Requires authentication
-        //[ProducesResponseType(200)] // Successful response
-        //[ProducesResponseType(500)] // Server error response
+        [Authorize] // Requires authentication
+        [ProducesResponseType(200)] // Successful response
+        [ProducesResponseType(500)] // Server error response
         public async Task<ActionResult> AddToCart(int productId)
         {
             try
@@ -67,9 +67,9 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPut("increment-quantity")]
-        //[Authorize] // Requires authentication
-        //[ProducesResponseType(200)] // Successful response
-        //[ProducesResponseType(500)] // Server error response
+        [Authorize] // Requires authentication
+        [ProducesResponseType(200)] // Successful response
+        [ProducesResponseType(500)] // Server error response
         public async Task<IActionResult> IncrementQuantity(int productId)
         {
             try
@@ -91,9 +91,9 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPut("decrement-quantity")]
-        //[Authorize] // Requires authentication
-        //[ProducesResponseType(200)] // Successful response
-        //[ProducesResponseType(500)] // Server error response
+        [Authorize] // Requires authentication
+        [ProducesResponseType(200)] // Successful response
+        [ProducesResponseType(500)] // Server error response
         public async Task<IActionResult> DecrementQuantity(int productId)
         {
             try
@@ -116,9 +116,9 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpDelete("remove-item-from-cart")]
-        //[Authorize] // Requires authentication
-        //[ProducesResponseType(typeof(bool), 200)] // Successful response
-        //[ProducesResponseType(500)] // Server error response
+        [Authorize] // Requires authentication
+        [ProducesResponseType(typeof(bool), 200)] // Successful response
+        [ProducesResponseType(500)] // Server error response
         public async Task<ActionResult> RemoveCartItem(int productId)
         {
             try

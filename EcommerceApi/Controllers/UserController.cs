@@ -19,7 +19,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(typeof(object), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -36,7 +36,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(typeof(object), 200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response
@@ -53,7 +53,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(401)] // Unauthorized response
         [ProducesResponseType(500)] // Server error response

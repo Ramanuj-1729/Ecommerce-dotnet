@@ -18,7 +18,7 @@ namespace EcommerceApi.Controllers
             _productService = productService;
         }
         [HttpPost]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         //[ProducesResponseType(200)] // Successful response
         //[ProducesResponseType(500)] // Server error response
         public async Task<IActionResult> AddProduct([FromForm] Product productDto, IFormFile image, IFormFileCollection images)
@@ -37,6 +37,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet("images")]
+        [Authorize]
         public async Task<IActionResult> GetProductImages(int id)
         {
             try
@@ -53,10 +54,9 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-        [Authorize] // Requires authentication
-        //[ProducesResponseType(typeof(object), 200)] // Successful response
-        //[ProducesResponseType(401)] // Unauthorized response
-        //[ProducesResponseType(500)] // Server error response
+        [ProducesResponseType(typeof(object), 200)] // Successful response
+        [ProducesResponseType(401)] // Unauthorized response
+        [ProducesResponseType(500)] // Server error response
         public async Task<IActionResult> GetProducts()
         {
             try
@@ -101,7 +101,7 @@ namespace EcommerceApi.Controllers
         }   
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "admin")] // Requires admin role
+        [Authorize] // (Roles = "admin") Requires admin role
         [ProducesResponseType(200)] // Successful response
         [ProducesResponseType(500)] // Server error response
         public async Task<IActionResult> DeleteProduct(int id)
@@ -118,6 +118,7 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] Product product, IFormFile image, IFormFileCollection images)
         {
             try

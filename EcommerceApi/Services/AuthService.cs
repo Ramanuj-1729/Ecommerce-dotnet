@@ -82,6 +82,8 @@ namespace EcommerceApi.Services
             };
 
             var token = new JwtSecurityToken(
+                    issuer: _configuration["Issuer"],
+                    audience: _configuration["Audience"],
                     claims: claims,
                     signingCredentials: credentails,
                     expires: DateTime.UtcNow.AddHours(2)

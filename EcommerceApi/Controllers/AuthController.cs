@@ -1,8 +1,11 @@
 ﻿using EcommerceApi.DTOs;
 using EcommerceApi.Models;
 using EcommerceApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace EcommerceApi.Controllers
 {
@@ -44,13 +47,23 @@ namespace EcommerceApi.Controllers
             {
                 var token = await _authService.Login(user);
                 _tokenService.SetTokenCookie(token);
-                return Ok(new { message = "Login successful" });
+                //return Ok(new { message = "Login successful" });
+                return Ok(new { Token = token });
             }
             catch (Exception e)
             {
                 return Unauthorized(new { Message = "Login failed.", Error = e.Message });
             }
         }
+
+        //private ClaimsPrincipal ParseToken(string token)
+        //{
+        //    JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        //    JwtSecurityToken parsedToken = tokenHandler.ReadJwtToken(token);
+
+        //    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(parsedToken.Subject);
+        //    return claimsPrincipal;
+        //}
 
         [HttpPost("Logout")]
         [ProducesResponseType(typeof(string), 200)]
