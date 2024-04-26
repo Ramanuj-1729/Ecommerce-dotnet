@@ -130,6 +130,74 @@ namespace EcommerceApi.Services
             }
         }
 
+        public async Task<bool> AddToCartByQuantity(string token, int productId, int quantity)
+        {
+            try
+            {
+                int userId = _jwtService.GetUserIdFromToken(token);
+
+                if (userId == 0) throw new Exception($"User not valid witrh token: {token}");
+
+                var user = await _context.Users
+                    .Include(u => u.Cart)
+                    .ThenInclude(c => c.CartItems)
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                var Product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
+                if (Product == null) throw new Exception($"Product with id {productId} not found");
+
+                if (user != null && Product != null)
+                {
+                    //If user doesnt have a cart (empty cart)
+                    if (user.Cart == null)
+                    {
+                        user.Cart = new Cart
+                        {
+                            UserId = userId,
+                            CartItems = new List<CartItem>()
+                        };
+
+                        _context.Cart.Add(user.Cart);
+                        await _context.SaveChangesAsync();
+
+                    }
+
+
+                }
+
+                CartItem? existingCartProduct = user.Cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+
+                if (existingCartProduct != null)
+                {
+                    existingCartProduct.Quantity = quantity;
+                }
+                else
+                {
+                    CartItem cartItem = new CartItem
+                    {
+                        CartId = user.Cart.Id,
+                        ProductId = productId,
+                        Quantity = quantity,
+                    };
+
+                    _context.CartItems.Add(cartItem);
+
+                }
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error adding product to cart: {ex}");
+                return false;
+
+            }
+        }
+
         public async Task<bool> DeleteFromCart(string token, int ProductId)
         {
             try
@@ -231,7 +299,7 @@ namespace EcommerceApi.Services
 
                     if (item != null)
                     {
-                        item.Quantity = item.Quantity >= 1 ? item.Quantity - 1 : item.Quantity;
+                        item.Quantity = item.Quantity > 1 ? --item.Quantity : item.Quantity;
 
                         if (item.Quantity == 0)
                         {
@@ -243,22 +311,6 @@ namespace EcommerceApi.Services
                     }
 
                 }
-
-                if (user != null)
-
-
-                    if (user != null && product != null)
-                    {
-                        var item = user.Cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
-                        if (item != null)
-                        {
-                            item.Quantity--;
-                            await _context.SaveChangesAsync();
-
-
-                            return true;
-                        }
-                    }
 
                 return false;
             }

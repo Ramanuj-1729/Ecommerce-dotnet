@@ -66,6 +66,30 @@ namespace EcommerceApi.Controllers
             }
         }
 
+        [HttpPost("add-to-cart-quantity")]
+        [Authorize] // Requires authentication
+        [ProducesResponseType(200)] // Successful response
+        [ProducesResponseType(500)] // Server error response
+        public async Task<ActionResult> AddToCartQuantity(int productId, int quantity)
+        {
+            try
+            {
+                // Extract JWT token from request header
+                var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var splitToken = token.Split(' ');
+                var jwtToken = splitToken[1];
+
+                // Add product to the cart using the JWT token and product ID
+                var isok = await _cartService.AddToCartByQuantity(jwtToken, productId, quantity);
+                return Ok(new { Message = "Prodcut Successfully added to cart" });
+            }
+            catch (Exception ex)
+            {
+                // Return server error if an exception occurs
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPut("increment-quantity")]
         [Authorize] // Requires authentication
         [ProducesResponseType(200)] // Successful response
@@ -81,7 +105,7 @@ namespace EcommerceApi.Controllers
 
                 // Increment quantity of the product in the cart
                 bool res = await _cartService.IncreaseQuantity(jwtToken, productId);
-                return res ? Ok(new { Message = "Cart Successfully Updated" }) : StatusCode(500, "An error occurred while incrementing quantity!");
+                return res ? Ok(new { Quantity = "Cart Successfully Updated" }) : StatusCode(500, "An error occurred while incrementing quantity!");
             }
             catch (Exception e)
             {

@@ -16,6 +16,18 @@ namespace EcommerceApi.Services
         {
             try
             {
+                // get all addresses for the user and find the default address and set it to false before setting the new default address to true 
+                if (address.IsDefault)
+                {
+                    var userAddresses = await _context.Addresses.Where(a => a.UserId == address.UserId).ToListAsync();
+                    foreach (var userAddress in userAddresses)
+                    {
+                        if (userAddress.IsDefault)
+                        {
+                            userAddress.IsDefault = false;
+                        }
+                    }
+                }
                 await _context.Addresses.AddAsync(address);
                 await _context.SaveChangesAsync();
                 return true;
@@ -35,11 +47,29 @@ namespace EcommerceApi.Services
 
                 if (UpdateAddress != null)
                 {
+                    UpdateAddress.FullName = address.FullName;
+                    UpdateAddress.phoneNumber = address.phoneNumber;
+                    UpdateAddress.houseNumber = address.houseNumber;
                     UpdateAddress.Street = address.Street;
                     UpdateAddress.City = address.City;
                     UpdateAddress.State = address.State;
                     UpdateAddress.Zip = address.Zip;
                     UpdateAddress.Country = address.Country;
+
+                    // get all addresses for the user and find the default address and set it to false before setting the new default address to true 
+                    if (address.IsDefault)
+                    {
+                        var userAddresses = await _context.Addresses.Where(a => a.UserId == address.UserId).ToListAsync();
+                        foreach (var userAddress in userAddresses)
+                        {
+                            if (userAddress.IsDefault)
+                            {
+                                userAddress.IsDefault = false;
+                            }
+                        }
+                    }
+                    UpdateAddress.IsDefault = address.IsDefault;
+                    UpdateAddress.AddressType = address.AddressType;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -92,16 +122,16 @@ namespace EcommerceApi.Services
             }
         }
 
-        public async Task<Address> GetAddressById(int id)
+        public async Task<List<Address>> GetAddressesById(int id)
         {
             try
             {
-                Address address = await _context.Addresses.FirstOrDefaultAsync(c => c.Id == id);
-                return address;
+                var allAddresses = await _context.Addresses.Where(a => a.UserId == id).ToListAsync();
+                return allAddresses;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retreiving address: {ex.Message}");
+                Console.WriteLine($"Error retreiving addresses: {ex.Message}");
                 return null;
             }
         }

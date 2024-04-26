@@ -43,9 +43,9 @@ namespace EcommerceApi.Controllers
         {
             try
             {
-                Address res = await _addressServices.GetAddressById(id);
+                List<Address> res = await _addressServices.GetAddressesById(id);
 
-                return res != null ? Ok(res) : NotFound($"Sorry no address found with id:{id}");
+                return res != null ? Ok(res) : NotFound($"Sorry no addresses found with id:{id}");
             }
             catch (Exception e)
             {

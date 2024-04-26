@@ -47,7 +47,7 @@ namespace EcommerceApi.Controllers
                 {
                     return BadRequest("Item already in the wish list");
                 }
-                return Ok("Product added Successfully to wishlist");
+                return Ok(true);
             }
             catch (Exception ex)
             {
