@@ -63,7 +63,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 await _userService.DeleteUser(id);
-                return Ok("User Successfully Deleted!!");
+                return Ok(new { Message = "User Successfully Deleted!!" });
             }
             catch (Exception e)
             {

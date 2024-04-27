@@ -63,8 +63,8 @@ namespace EcommerceApi.Controllers
             try
             {
                 var isok = await _addressServices.CreateAddress(address);
-                return Ok("Address Successfully Added!!");
-            }
+                return Ok(new { Message = "Address Successfully Added!!" });
+                }
             catch (Exception e)
             {
                 return StatusCode(500, e.Message);
@@ -81,7 +81,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 await _addressServices.UpdateAddress(id, address);
-                return Ok("Address Successfully Updated!!");
+                return Ok(new { Message = "Address Successfully Updated!!" });
             }
             catch (Exception e)
             {
@@ -99,7 +99,7 @@ namespace EcommerceApi.Controllers
             try
             {
                 await _addressServices.DeleteAddress(id);
-                return Ok("Address Successfully Deleted!!");
+                return Ok(new { Message = "Address Successfully Deleted!!" });
             }
             catch (Exception e)
             {

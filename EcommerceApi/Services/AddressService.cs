@@ -48,8 +48,8 @@ namespace EcommerceApi.Services
                 if (UpdateAddress != null)
                 {
                     UpdateAddress.FullName = address.FullName;
-                    UpdateAddress.phoneNumber = address.phoneNumber;
-                    UpdateAddress.houseNumber = address.houseNumber;
+                    UpdateAddress.PhoneNumber = address.PhoneNumber;
+                    UpdateAddress.HouseNumber = address.HouseNumber;
                     UpdateAddress.Street = address.Street;
                     UpdateAddress.City = address.City;
                     UpdateAddress.State = address.State;
