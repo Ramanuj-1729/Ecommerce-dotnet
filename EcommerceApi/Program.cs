@@ -68,6 +68,12 @@ builder.Services.AddScoped<AddressService>();
 //Cart Service
 builder.Services.AddScoped<CartService>();
 
+//Order Service
+builder.Services.AddScoped<OrderService>();
+
+//Payment Service
+builder.Services.AddScoped<PaymentService>();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -14,13 +14,23 @@ namespace EcommerceApi.Services
     {
         private readonly IConfiguration _configuration;
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
 
-        public AuthService(AppDbContext context, IMapper mapper, IConfiguration configuration)
+        public AuthService(AppDbContext context, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         }
 
         public async Task<string> Register(UserRegisterDTO user)

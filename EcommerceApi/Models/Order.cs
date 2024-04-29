@@ -13,14 +13,10 @@ namespace EcommerceApi.Models
         [Required(ErrorMessage = "Order date is required.")]
         public DateTime OrderDate { get; set; } = DateTime.Now;
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalPrice { get; set; }
-
         [Required(ErrorMessage = "Order status is required.")]
         public string OrderStatus { get; set; } = "Pending";
 
-        public string OrderId { get; set; }
-        public virtual required User user { get; set; }
+        public virtual User user { get; set; }
         public List<OrderItem> OrderItems { get; set; }
     }
 }
